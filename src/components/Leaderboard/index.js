@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useTable, useFilters } from 'react-table';
 import axios from 'axios';
+import { objectTypeAnnotation } from "@babel/types";
 
 function Leaderboard() {
 
@@ -57,8 +58,9 @@ function Leaderboard() {
                     },
                     {
                         Header: 'Clean',
+                        id: 'clean',
                         accessor: (row) => {
-                            return row.clean ? '*' : ''
+                            return row.clean && Object.keys(row.solves).length ? '*' : ''
                         }
                     }
                 ];
