@@ -100,6 +100,7 @@ function Leaderboard() {
                     }
                 }));
                 setColumns(cols);
+                document.title = `Boswords: ${res.data.event.Title} Standings`;
             })
 
 
