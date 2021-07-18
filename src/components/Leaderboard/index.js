@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useTable, useFilters } from 'react-table';
 import axios from 'axios';
-import config from '../../env';
+import config from '../../env.js';
 
 function Leaderboard() {
 
