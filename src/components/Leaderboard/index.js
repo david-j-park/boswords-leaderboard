@@ -92,7 +92,7 @@ function Leaderboard() {
                 let irank = 0;
                 setStandings(res.data.entries.map((v, i) => {
                     if (v.totalScore < (res.data.entries[i-1] || {totalScore: -1}).totalScore) orank++;
-                    if (v.entry_type == 'Individual') irank++;
+                    if (v.entry_type === 'Individual') irank++;
                     else prank++;
                     return {
                         ...v,
