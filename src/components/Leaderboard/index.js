@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { useTable, useFilters } from 'react-table';
 import axios from 'axios';
 import config from '../../env.js';
@@ -9,8 +9,9 @@ function Leaderboard() {
     const [data, setStandings] = useState([]);
     const [columns, setColumns] = useState([]);
     const [typeFilter, setTypeFilter] = useState('All');
+    // eslint-disable-next-line
     const [nameFilter, setNameFilter] = useState();
-    const [working, setWorking] = useState(false);
+    //const [working, setWorking] = useState(false);
 
     
     //const [intialized, setInitialized] = useState(false);
@@ -108,7 +109,7 @@ function Leaderboard() {
 
     const handleTypeChange = function (e) {
         setTypeFilter(e.target.value);
-        tableInstance.setFilter('entry_type', e.target.value == 'All' ? null : e.target.value);
+        tableInstance.setFilter('entry_type', e.target.value === 'All' ? null : e.target.value);
     }
 
     const handleNameChange = function (e) {
@@ -125,15 +126,15 @@ function Leaderboard() {
                     <h2>{event.Title}</h2>
                     <div className="filters">
                         <div className="form-check">
-                            <input className="form-check-input" type="radio" name="typef" value="All" onChange={handleTypeChange} checked={typeFilter == 'All'} id="allradio" /> 
+                            <input className="form-check-input" type="radio" name="typef" value="All" onChange={handleTypeChange} checked={typeFilter === 'All'} id="allradio" /> 
                             <label className="form-check-label" htmlFor="allradio">All</label>
                         </div>
                         <div className="form-check">
-                            <input className="form-check-input" type="radio" name="typef" value="Individual" onChange={handleTypeChange} checked={typeFilter == 'Individual'} id="indradio" /> 
+                            <input className="form-check-input" type="radio" name="typef" value="Individual" onChange={handleTypeChange} checked={typeFilter === 'Individual'} id="indradio" /> 
                             <label className="form-check-label" htmlFor="indradio">Individuals</label>
                         </div>
                         <div className="form-check">
-                            <input className="form-check-input" type="radio" name="typef" value="Pair" onChange={handleTypeChange} checked={typeFilter == 'Pair'} id="pradio" /> 
+                            <input className="form-check-input" type="radio" name="typef" value="Pair" onChange={handleTypeChange} checked={typeFilter === 'Pair'} id="pradio" /> 
                             <label className="form-check-label" htmlFor="pradio">Pairs</label>
                         </div>
                         <div>
