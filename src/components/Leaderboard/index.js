@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useTable, useFilters } from 'react-table';
 import axios from 'axios';
-import { objectTypeAnnotation } from "@babel/types";
+import config from '../../env';
 
 function Leaderboard() {
 
@@ -33,7 +33,7 @@ function Leaderboard() {
     useEffect(() => {
         console.log('loading');
         console.log('initializing');
-        axios.get('http://localhost:1337/standings/2')
+        axios.get(`${config.apiRoot}/standings/${config.eventId}`)
             .then(res => {
                 let cols = [
                     {
