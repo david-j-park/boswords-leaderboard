@@ -3,8 +3,7 @@ import Leaderboard from './components/Leaderboard';
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 
 function App() {

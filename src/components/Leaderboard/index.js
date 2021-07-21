@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useTable, useFilters } from 'react-table';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import config from '../../env.js';
 
 function Leaderboard(props) {
 
@@ -14,13 +13,13 @@ function Leaderboard(props) {
     const [typeFilter, setTypeFilter] = useState('All');
     // eslint-disable-next-line
     const [nameFilter, setNameFilter] = useState();
+    
+    // eslint-disable-next-line
     const [tagFilter, setTagFilter] = useState();
     //const [working, setWorking] = useState(false);
 
     
     //const [intialized, setInitialized] = useState(false);
-
-    /* columns and such */
 
     const tableInstance = useTable({
         columns, data
@@ -34,13 +33,11 @@ function Leaderboard(props) {
         prepareRow,
     } = tableInstance;
 
-    let tags = {};
-
     /* load the results */
     useEffect(() => {
         console.log('loading');
         console.log('initializing');
-        axios.get(`${config.apiRoot}/standings/${eventid}`)
+        axios.get(`https://4chbxgj610.execute-api.us-east-1.amazonaws.com/production/2`)
             .then(res => {
                 let cols = [
                     {
@@ -99,9 +96,6 @@ function Leaderboard(props) {
                     })
                 })
                 setEvent(res.data.event);
-                let orank = 1;
-                let prank = 0;
-                let irank = 0;
                 
                 setStandings(res.data.entries);
                 /*

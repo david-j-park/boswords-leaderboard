@@ -1,6 +1,6 @@
 const config = {
-    apiRoot: 'https://boswordsdb.herokuapp.com',
-    eventId: 1
+    apiRoot: 'http://localhost:1337',
+    eventId: 2
 }
 
 export default config;
