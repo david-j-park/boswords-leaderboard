@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useTable, useFilters } from 'react-table';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import config from '../../env.js';
 
-function Leaderboard() {
+function Leaderboard(props) {
+
+    let { eventid } = useParams();
 
     const [event, setEvent] = useState();
     const [data, setStandings] = useState([]);
@@ -11,6 +14,7 @@ function Leaderboard() {
     const [typeFilter, setTypeFilter] = useState('All');
     // eslint-disable-next-line
     const [nameFilter, setNameFilter] = useState();
+    const [tagFilter, setTagFilter] = useState();
     //const [working, setWorking] = useState(false);
 
     
@@ -30,24 +34,32 @@ function Leaderboard() {
         prepareRow,
     } = tableInstance;
 
+    let tags = {};
+
     /* load the results */
     useEffect(() => {
         console.log('loading');
         console.log('initializing');
-        axios.get(`${config.apiRoot}/standings/${config.eventId}`)
+        axios.get(`${config.apiRoot}/standings/${eventid}`)
             .then(res => {
                 let cols = [
                     {
                         Header: 'Overall Rank',
                         accessor: 'rank',
                     },
+                    /*
                     {
                         Header: 'Pair/Individual Rank',
                         accessor: 'typerank'
                     },
+                    */
                     {
                         Header: 'Name',
                         accessor: 'display_name'
+                    },
+                    {
+                        Header: 'Division',
+                        accessor: 'division'
                     },
                     {
                         Header: 'Overall Score',
@@ -90,6 +102,9 @@ function Leaderboard() {
                 let orank = 1;
                 let prank = 0;
                 let irank = 0;
+                
+                setStandings(res.data.entries);
+                /*
                 setStandings(res.data.entries.map((v, i) => {
                     if (v.totalScore < (res.data.entries[i-1] || {totalScore: -1}).totalScore) orank++;
                     if (v.entry_type === 'Individual') irank++;
@@ -100,12 +115,14 @@ function Leaderboard() {
                         typerank: v.entry_type === 'Individual' ? irank : prank
                     }
                 }));
+                */
                 setColumns(cols);
+                if (res.data.event && res.data.event.divisions && res.data.event.divisions.length > 1) tableInstance.setFilter('division', res.data.event.divisions[0]);
                 document.title = `Boswords: ${res.data.event.Title} Standings`; 
             })
 
 
-    }, [])
+    }, [eventid, tableInstance])
 
     const handleTypeChange = function (e) {
         setTypeFilter(e.target.value);
@@ -117,6 +134,10 @@ function Leaderboard() {
         tableInstance.setFilter('display_name', e.target.value);
     }
 
+    const handleDivChange = function (e) {
+        tableInstance.setFilter('division', e.target.value);
+    }
+
     return (
         <div>
             {
@@ -125,6 +146,19 @@ function Leaderboard() {
                     <h1>Leaderboard</h1>
                     <h2>{event.Title}</h2>
                     <div className="filters">
+                        {
+                            event.divisions && event.divisions.length > 1 && 
+                            <div>
+                                <label className="form-label">Choose a Division:</label>
+                                <select className="form-control"name="divs" onChange={handleDivChange}>
+                                    { event.divisions.map((v) => {
+                                        return <option key={v} value={v}>{v}</option>
+                                    })
+                                    }
+                                </select>
+                            </div>
+                        }
+                        <label className="form-label">Filter by Entry Type:</label>
                         <div className="form-check">
                             <input className="form-check-input" type="radio" name="typef" value="All" onChange={handleTypeChange} checked={typeFilter === 'All'} id="allradio" /> 
                             <label className="form-check-label" htmlFor="allradio">All</label>
@@ -141,6 +175,7 @@ function Leaderboard() {
                             <label className="form-label">Filter by name:</label> 
                             <input type="text" name="namefilter" onChange={handleNameChange} className="form-control" />
                         </div>
+                        
                     </div>
                     <table {...getTableProps} className="table">
                         <thead>

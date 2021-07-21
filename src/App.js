@@ -1,11 +1,27 @@
 import './App.css';
 import Leaderboard from './components/Leaderboard';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
 function App() {
+  
   return (
-    <div className="App">
-      <Leaderboard />
-    </div>
+    <Router>
+      <div className="App">
+        <Switch>
+          <Route path="/:eventid">
+            <Leaderboard />
+          </Route>
+          <Route path="/">
+          <Leaderboard />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 
