@@ -37,7 +37,7 @@ function Leaderboard(props) {
     useEffect(() => {
         console.log('loading');
         console.log('initializing');
-        axios.get(`https://4chbxgj610.execute-api.us-east-1.amazonaws.com/production/2`)
+        axios.get(`https://4chbxgj610.execute-api.us-east-1.amazonaws.com/production/${eventid}`)
             .then(res => {
                 let cols = [
                     {
