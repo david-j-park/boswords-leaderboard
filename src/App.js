@@ -5,6 +5,7 @@ import {
   Switch,
   Route
 } from "react-router-dom";
+import 'react-app-polyfill/ie11';
 
 function App() {
   
