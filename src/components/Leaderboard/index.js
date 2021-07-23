@@ -157,7 +157,9 @@ const defaultColumn = React.useMemo(
                     ]}
                 ];
                 /* column group for each puzzle */
-                res.data.event.puzzles.forEach(v => {
+                res.data.event.puzzles.sort((a, b) => {
+                    return b.Sequence - a.Sequence;
+                }).forEach(v => {
                     cols.push({
                         Header: `Puzzle ${v.Sequence} (${v.Words})`,
                         columns: [
