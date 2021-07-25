@@ -16,6 +16,7 @@ function Leaderboard(props) {
     const [data, setStandings] = useState([]);
     const [columns, setColumns] = useState([]);
     const [typeFilter, setTypeFilter] = useState('All');
+    const [divFilter, setDivFilter] = useState();
     // eslint-disable-next-line
     const [nameFilter, setNameFilter] = useState();
 
@@ -37,7 +38,7 @@ function Leaderboard(props) {
     .tr {
       :last-child {
         .td {
-          border-bottom: 0;
+          border-bottom-width: 1px;
         }
       }
     }
@@ -202,7 +203,10 @@ const defaultColumn = React.useMemo(
                 }));
                 */
                 setColumns(cols);
-                if (res.data.event && res.data.event.divisions && res.data.event.divisions.length > 1) tableInstance.setFilter('division', res.data.event.divisions[0]);
+                if (res.data.event && res.data.event.divisions && res.data.event.divisions.length > 1) {
+                    tableInstance.setFilter('division', res.data.event.divisions[0]);
+                    setDivFilter(res.data.event.divisions[0]);
+                }
                 document.title = `Boswords: ${res.data.event.Title} Standings`;
             })
 
@@ -220,6 +224,7 @@ const defaultColumn = React.useMemo(
     }
 
     const handleDivChange = function (e) {
+        setDivFilter(e.target.value);
         tableInstance.setFilter('division', e.target.value);
     }
 
@@ -230,34 +235,46 @@ const defaultColumn = React.useMemo(
                 <div>
                     <h2>{event.Title}</h2>
                     <div className="filters">
+                        
                         {
                             event.divisions && event.divisions.length > 1 &&
-                            <div>
-                                <label className="form-label">Choose a Division:</label>
-                                <select className="form-control" name="divs" onChange={handleDivChange}>
+                            <div className="row g-3">
+                                <div className="col-2">Choose a Division:</div>
+                                    <div className="col-4">
                                     {event.divisions.map((v) => {
-                                        return <option key={v} value={v}>{v}</option>
+                                        return <div className="form-check form-check-inline">
+                                                <input className="form-check-input" type="radio" name="divr" value={v} onChange={handleDivChange} checked={divFilter === v} id={`${v}radio`}/>
+                                                <label className="form-check-label" htmlFor={`${v}radio`}>{v}</label>
+                                            </div>
                                     })
                                     }
-                                </select>
+                                    </div>
+                                
                             </div>
                         }
-                        <p className="form-label">Filter by Entry Type:</p>
-                        <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" name="typef" value="All" onChange={handleTypeChange} checked={typeFilter === 'All'} id="allradio" />
-                            <label className="form-check-label" htmlFor="allradio">All</label>
+                        <div className="row g-3">
+                            <div class="col-2">Filter by Entry Type:</div>
+                            <div className="col-4">
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" name="typef" value="All" onChange={handleTypeChange} checked={typeFilter === 'All'} id="allradio" />
+                                    <label className="form-check-label" htmlFor="allradio">All</label>
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" name="typef" value="Individual" onChange={handleTypeChange} checked={typeFilter === 'Individual'} id="indradio" />
+                                    <label className="form-check-label" htmlFor="indradio">Individuals</label>
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" name="typef" value="Pair" onChange={handleTypeChange} checked={typeFilter === 'Pair'} id="pradio" />
+                                    <label className="form-check-label" htmlFor="pradio">Pairs</label>
+                                </div>
+                            </div>
                         </div>
-                        <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" name="typef" value="Individual" onChange={handleTypeChange} checked={typeFilter === 'Individual'} id="indradio" />
-                            <label className="form-check-label" htmlFor="indradio">Individuals</label>
-                        </div>
-                        <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" name="typef" value="Pair" onChange={handleTypeChange} checked={typeFilter === 'Pair'} id="pradio" />
-                            <label className="form-check-label" htmlFor="pradio">Pairs</label>
-                        </div>
-                        <div>
-                            <label className="form-label">Filter by name:</label>
-                            <input type="text" name="namefilter" value={nameFilter} onChange={handleNameChange} className="form-control" />
+                        <div className="row g-3">
+                            <div class="col-2"><label className="form-label">Filter by name:</label></div>
+                                <div class="col-6">
+                                    
+                                    <input type="text" name="namefilter" value={nameFilter} onChange={handleNameChange} className="form-control" />
+                                </div>
                         </div>
 
                     </div>
@@ -277,7 +294,7 @@ const defaultColumn = React.useMemo(
 
                         <div {...getTableBodyProps()}>
                             <FixedSizeList
-                                height={400}
+                                height={500}
                                 itemCount={rows.length}
                                 itemSize={35}
                                 width={totalColumnsWidth + scrollBarSize}
