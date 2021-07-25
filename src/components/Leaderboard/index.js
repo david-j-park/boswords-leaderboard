@@ -108,6 +108,13 @@ const defaultColumn = React.useMemo(
         [prepareRow, rows]
       )
 
+    /* check for IE */
+    useEffect(() => {
+        if (window.navigator.userAgent.match(/MSIE|Trident/) !== null){
+            alert('You appear to be running Internet Explorer, which our site does not entirely support. We strongly reccomend using Chrome, Firefox or Microsoft Edge for the best experience.');
+        }
+    }, []);
+
     /* load the results */
     useEffect(() => {
         console.log('loading');
