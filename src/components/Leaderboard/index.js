@@ -122,20 +122,15 @@ const defaultColumn = React.useMemo(
                             accessor: 'rank',
                             width: 70
                         },
-                        /*
                         {
-                            Header: 'Pair/Individual Rank',
-                            accessor: 'typerank'
+                            Header: 'Ind./Pr. Rank',
+                            accessor: 'typeRank',
+                            width: 70
                         },
-                        */
                         {
                             Header: 'Name',
                             accessor: 'display_name',
                             width: 300
-                        },
-                        {
-                            Header: 'Division',
-                            accessor: 'division'
                         },
                         {
                             Header: 'Overall Score',
@@ -156,6 +151,14 @@ const defaultColumn = React.useMemo(
     
                     ]}
                 ];
+                if (res.data.event.divisions && res.data.event.divisions.length > 1){
+                    cols[0].columns.splice(3, 0, 
+                        {
+                            Header: 'Division',
+                            accessor: 'division'
+                        }
+                    );
+                }
                 /* column group for each puzzle */
                 res.data.event.puzzles.sort((a, b) => {
                     return b.Sequence - a.Sequence;
@@ -203,7 +206,7 @@ const defaultColumn = React.useMemo(
                 document.title = `Boswords: ${res.data.event.Title} Standings`;
             })
 
-
+    // eslint-disable-next-line
     }, [eventid, tableInstance])
 
     const handleTypeChange = function (e) {
