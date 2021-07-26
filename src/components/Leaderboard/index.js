@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useTable, useFilters, useBlockLayout } from 'react-table';
+import { useTable, useFilters, useFlexLayout, useResizeColumns } from 'react-table';
 import { useParams } from 'react-router-dom';
 import { FixedSizeList } from 'react-window';
 import styled from 'styled-components';
@@ -53,12 +53,38 @@ function Leaderboard(props) {
       :last-child {
         border-right: 1px solid black;
       }
+
     }
 
     .th {
         font-weight: bold;
         text-align: center;
         border-bottom: 1px solid black;
+
+        .resizer {
+            display: inline-block;
+            width: 10px;
+            height: 100%;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transform: translateX(50%);
+            z-index: 1;
+            ${'' /* prevents from scrolling while dragging on touch devices */}
+            touch-action:none;
+    
+            &.isResizing {
+              background: red;
+            }
+          }
+    }
+
+    .td {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        
     }
   }
 `
@@ -73,7 +99,7 @@ const defaultColumn = React.useMemo(
 
     const tableInstance = useTable({
         columns, data, defaultColumn
-    }, useBlockLayout, useFilters);
+    }, useFlexLayout, useFilters, useResizeColumns);
 
     const {
         getTableProps,
@@ -138,7 +164,8 @@ const defaultColumn = React.useMemo(
                         {
                             Header: 'Name',
                             accessor: 'display_name',
-                            width: 300
+                            width: 300,
+                            maxWidth: 500
                         },
                         {
                             Header: 'Overall Score',
@@ -293,6 +320,13 @@ const defaultColumn = React.useMemo(
                                     {headerGroup.headers.map(column => (
                                         <div {...column.getHeaderProps()} className="th">
                                             {column.render('Header')}
+                                            {
+                                                <div 
+                                                    {...column.getResizerProps()}
+                                                    className="resizer"
+                                                >
+                                                </div>
+                                            }
                                         </div>
                                     ))}
                                 </div>
