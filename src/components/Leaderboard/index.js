@@ -4,9 +4,11 @@ import { useParams } from 'react-router-dom';
 import { FixedSizeList } from 'react-window';
 import styled from 'styled-components';
 import scrollbarWidth from '../scrollbarWidth'
-
+import Cookies from 'universal-cookie';
 
 import axios from 'axios';
+
+const cookies = new Cookies();
 
 function Leaderboard(props) {
 
@@ -237,10 +239,13 @@ const defaultColumn = React.useMemo(
                 }));
                 */
                 setColumns(cols);
+                
                 if (res.data.event && res.data.event.divisions && res.data.event.divisions.length > 1) {
-                    tableInstance.setFilter('division', res.data.event.divisions[0]);
-                    setDivFilter(res.data.event.divisions[0]);
+                    tableInstance.setFilter('division', cookies.get('division_filter') || res.data.event.divisions[0]);
+                    setDivFilter(cookies.get('division_filter') || res.data.event.divisions[0]);
                 }
+                tableInstance.setFilter('entry_type', cookies.get('entry_type_filter') === 'All' ? null : cookies.get('entry_type_filter'));
+                setTypeFilter(cookies.get('entry_type_filter'));
                 document.title = `Boswords: ${res.data.event.Title} Standings`;
             })
 
@@ -250,6 +255,7 @@ const defaultColumn = React.useMemo(
     const handleTypeChange = function (e) {
         setTypeFilter(e.target.value);
         tableInstance.setFilter('entry_type', e.target.value === 'All' ? null : e.target.value);
+        cookies.set('entry_type_filter', e.target.value);
     }
 
     const handleNameChange = function (e) {
@@ -260,6 +266,7 @@ const defaultColumn = React.useMemo(
     const handleDivChange = function (e) {
         setDivFilter(e.target.value);
         tableInstance.setFilter('division', e.target.value);
+        cookies.set('division_filter', e.target.value);
     }
 
     return (
