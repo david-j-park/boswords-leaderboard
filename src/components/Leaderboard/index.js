@@ -178,7 +178,7 @@ const defaultColumn = React.useMemo(
                             accessor: 'entry_type'
                         },
                         {
-                            Header: '',
+                            Header: '*',
                             id: 'clean',
                             accessor: (row) => {
                                 return row.clean && Object.keys(row.solves).length ? '*' : ''
@@ -319,6 +319,7 @@ const defaultColumn = React.useMemo(
                         </div>
 
                     </div>
+                    <div>* indicates clean solve on all puzzles</div>
                     <Styles>
                     <div {...getTableProps()} className="table">
                         <div>
@@ -353,6 +354,7 @@ const defaultColumn = React.useMemo(
                     </div>
                     </Styles>
                 </div>
+                
 
             }
             {
