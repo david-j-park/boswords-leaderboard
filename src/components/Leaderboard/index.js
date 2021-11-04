@@ -355,16 +355,6 @@ const defaultColumn = React.useMemo(
                     </div>
                     </Styles>
                     
-                    {data && data.length && divFilter &&
-                    <PuzzleStatistics event={event.Title} puzzle={event.puzzles[0].Sequence} solves={
-                            data.filter(v => {
-                                return v.division === divFilter && v.solves["" + event.puzzles[0].id];
-                            }).map(v => {
-                                return v.solves["" + event.puzzles[0].id];
-                            })
-                        }></PuzzleStatistics>
-                                         
-                    }
                     
                 </div>
                 
