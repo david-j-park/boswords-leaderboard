@@ -5,8 +5,6 @@ import { FixedSizeList } from 'react-window';
 import styled from 'styled-components';
 import scrollbarWidth from '../scrollbarWidth'
 import Cookies from 'universal-cookie';
-import PuzzleStatistics  from "../PuzzleStatistics";
-
 import axios from 'axios';
 
 const cookies = new Cookies();
