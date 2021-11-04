@@ -1,5 +1,6 @@
 import './App.css';
 import Leaderboard from './components/Leaderboard';
+import PuzzleStatistics from './components/PuzzleStatistics';
 import {
   BrowserRouter as Router,
   Switch,
@@ -13,6 +14,9 @@ function App() {
     <Router>
       <div className="App">
         <Switch>
+          <Route path="/:puzzleid/stats">
+            <PuzzleStatistics />
+          </Route>
           <Route path="/:eventid">
             <Leaderboard />
           </Route>

@@ -5,6 +5,7 @@ import { FixedSizeList } from 'react-window';
 import styled from 'styled-components';
 import scrollbarWidth from '../scrollbarWidth'
 import Cookies from 'universal-cookie';
+import PuzzleStatistics  from "../PuzzleStatistics";
 
 import axios from 'axios';
 
@@ -353,6 +354,18 @@ const defaultColumn = React.useMemo(
                         </div>
                     </div>
                     </Styles>
+                    
+                    {data && data.length && divFilter &&
+                    <PuzzleStatistics event={event.Title} puzzle={event.puzzles[0].Sequence} solves={
+                            data.filter(v => {
+                                return v.division === divFilter && v.solves["" + event.puzzles[0].id];
+                            }).map(v => {
+                                return v.solves["" + event.puzzles[0].id];
+                            })
+                        }></PuzzleStatistics>
+                                         
+                    }
+                    
                 </div>
                 
 
