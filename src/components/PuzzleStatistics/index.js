@@ -1,5 +1,5 @@
 //import userEvent from '@testing-library/user-event';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState} from 'react';
 import { useParams } from 'react-router';
 import axios from 'axios';
 import _ from 'lodash';
@@ -58,75 +58,84 @@ const tfmt = function(secs){
     return `${mins}:${pad(secs)}`;
 }
 
-let solves;
+
 
 function PuzzleStatistics(props){
 
     let { puzzleid } = useParams();
     
-    //const [solves, setSolves] = useState();
     const [selectedDivision, setSelectedDvision] = useState('Stormy');
-    const [entryType] = useState('All');
-    const [cleanOnly] = useState(true);
-    const [statistics, setStatistics] = useState({});
+    //const [entryType] = useState('All');
+    //const [cleanOnly] = useState(true);
+    const [statistics, setStatistics] = useState();
+    const [divisions, setDivisions] = useState([]);
     
-    let colors = [
+    const colors = [
         '#B6D47E',
         '#EB8DC5',
         '#F2D761',
         '#8FD9E3',
         '#A8A8A8'
-    ]
+    ];
+
     const handleDivChange = (e) => {
         setSelectedDvision(e.target.value);
-        prepStats(e.target.value);
     }
- 
-    const prepStats = useCallback(() => {
-        //filter by division
-        let stats = _.groupBy(solves.filter(v => {
-            return v.division === selectedDivision;
-        }), (s) => {
-            return `Puzzle #${s.sequence}`
-        });//'title');
-         
-        //for each puzzle, do the math and create a data series
-
-        let temp ={};
-
-        for (let x in stats){
-            let s = (stats[x]).filter(v => {
-                return (cleanOnly ? v.clean : true) &&
-                (entryType === 'All' ? true : v.entryType === entryType) &&
-                v.time < 20 * 60;
-            }).sort((a, b) => {
-                return a.time - b.time;
-            });
-            temp[x] = {
-                mean: s.reduce((prev, cur) => {
-                    return prev + cur.time;
-                }, 0) / s.length,
-                median: s[Math.ceil(s.length / 2) - 1].time,
-                q1: s[Math.ceil(s.length * .25) - 1].time,
-                q3: s[Math.ceil(s.length * .75) - 1].time,
-                min: s[0].time,
-                max: s[s.length - 1].time,
-                solveCount: s.length
-            }
-        }
-        
-        setStatistics(temp);
-
-    }, [selectedDivision, cleanOnly, entryType]);
 
     useEffect(() => {
         //get the data
         axios.get(`https://4chbxgj610.execute-api.us-east-1.amazonaws.com/dev/solve-data/${puzzleid}`)
             .then(res => {
-                solves = res.data;
-                prepStats();
+                //setSolves(res.data);
+
+                //get divisions
+                let divs = _.uniqBy(res.data, 'division').map(v => {
+                    return v.division;
+                });
+                setDivisions(divs);
+
+                let stats = {};
+                
+                //compute stats for each division
+                divs.forEach((div, i) => {
+
+                    stats[div] = {};
+                    
+                    //filter by division, group by puzzle
+                    let divSolves = _.groupBy(res.data.filter(v => {
+                        return v.division === div;
+                    }), (s) => {
+                        return `Puzzle #${s.sequence}`
+                    });
+
+                    for (let x in divSolves){ //for each puzzle. . .
+
+                        //limit to "good" solves
+                        let s = (divSolves[x].filter(v => {
+                            return v.clean && v.time < 20 * 60;
+                        })).sort((a, b) => {
+                            return a.time - b.time;
+                        });
+
+                        //compute stats
+                        stats[div][x] = {
+                            mean: s.reduce((prev, cur) => {
+                                return prev + cur.time;
+                            }, 0) / s.length,
+                            median: s[Math.ceil(s.length / 2) - 1].time,
+                            q1: s[Math.ceil(s.length * .25) - 1].time,
+                            q3: s[Math.ceil(s.length * .75) - 1].time,
+                            min: s[0].time,
+                            max: s[s.length - 1].time,
+                            solveCount: s.length
+                        }
+
+                    }
+                });
+
+                setStatistics(stats);
             })
-    }, [puzzleid, prepStats]);
+    }, [puzzleid]);
 
    
 
@@ -157,9 +166,9 @@ function PuzzleStatistics(props){
                                 outliers: []
                             }
                         }
-                        boxStyle={{fill: colors[i]}}
-                        tickStyle={{stroke: colors[i]}}
-                        whiskerStyle={{stroke: colors[i]}}
+                        boxStyle={{fill: colors[i % colors.length]}}
+                        tickStyle={{stroke: colors[i % colors.length]}}
+                        whiskerStyle={{stroke: colors[i % colors.length]}}
                     />
                 </div>
             </div>)    
@@ -170,12 +179,29 @@ function PuzzleStatistics(props){
         </div>
     }
 
+    function DivSelector(props){
+        let d = props.divs;
+        let outs = d.map((v, i) => {
+            return (
+                <React.Fragment key={i}>
+                    <input type="radio" className="btn-check" name="btnradio" id={v + i} value={v} checked={selectedDivision === v} onChange={handleDivChange} autoComplete="off" />
+                    <label className="btn btn-outline-dark" htmlFor={v + i}>{v}</label>
+                </React.Fragment>
+            )
+        })
+        return <div className="btn-group" role="group" aria-label="Division Selector">
+            {outs}
+        </div>
+    }
+
     return (
         <Styles>
             <h1>Boswords Fall '21 League</h1>
             <h2>Solve Statistics</h2>
             <p>Data below include all clean solves completed within the 20-minute time limit.</p>
             <p>If you'd like to do your own analysis you can download the raw data in CSV format <a href={`https://4chbxgj610.execute-api.us-east-1.amazonaws.com/dev/solve-data/csv/${puzzleid}`}>here</a>.</p>
+            <DivSelector divs={divisions} />
+            {/*
             <div className="btn-group" role="group" aria-label="Division Selector">
                 <input type="radio" className="btn-check" name="btnradio" id="btnradio1" value="Stormy" checked={selectedDivision === 'Stormy'} onChange={handleDivChange} autoComplete="off" />
                 <label className="btn btn-outline-dark" htmlFor="btnradio1">Stormy</label>
@@ -186,11 +212,9 @@ function PuzzleStatistics(props){
                 <input type="radio" className="btn-check" name="btnradio" id="btnradio3" value="Smooth" checked={selectedDivision === 'Smooth'} onChange={handleDivChange} autoComplete="off" />
                 <label className="btn btn-outline-dark" htmlFor="btnradio3">Smooth</label>
             </div>
-            {!statistics && <p>Hang on</p>}
+            */}
             {statistics &&
-                <div>
-                    <StatsList stats={statistics} />
-                </div>
+                <StatsList stats={statistics[selectedDivision]} />
             }
         </Styles>        
     )
