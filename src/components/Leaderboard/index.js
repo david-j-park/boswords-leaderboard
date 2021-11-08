@@ -244,7 +244,7 @@ const defaultColumn = React.useMemo(
                     setDivFilter(cookies.get('division_filter') || res.data.event.divisions[0]);
                 }
                 tableInstance.setFilter('entry_type', cookies.get('entry_type_filter') === 'All' ? null : cookies.get('entry_type_filter'));
-                setTypeFilter(cookies.get('entry_type_filter'));
+                setTypeFilter(cookies.get('entry_type_filter') || 'All');
                 document.title = `Boswords: ${res.data.event.Title} Standings`;
             })
 
