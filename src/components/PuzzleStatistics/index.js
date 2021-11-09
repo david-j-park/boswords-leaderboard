@@ -98,7 +98,10 @@ function PuzzleStatistics(props){
                 let divs = _.uniqBy(res.data, 'division').map(v => {
                     return v.division;
                 }).sort((a, b) => {
-                    return divranks[a] - divranks[b];
+                    if (divranks[a] && divranks[b]){
+                        return divranks[a] - divranks[b];
+                    }
+                    else return a.localeCompare(b);
                 });
                 setDivisions(divs);
 
