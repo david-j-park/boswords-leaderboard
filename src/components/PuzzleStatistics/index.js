@@ -6,6 +6,12 @@ import _ from 'lodash';
 import styled from 'styled-components';
 import {Boxplot} from 'react-boxplot';
 
+const divranks = {
+    Stormy: 1,
+    Choppy: 2,
+    Smooth: 3
+}
+
 const Styles = styled.div`
         font-family: Spinnaker, sans-serif;
         text-align: center;
@@ -91,6 +97,8 @@ function PuzzleStatistics(props){
                 //get divisions
                 let divs = _.uniqBy(res.data, 'division').map(v => {
                     return v.division;
+                }).sort((a, b) => {
+                    return divranks[a] - divranks[b];
                 });
                 setDivisions(divs);
 
