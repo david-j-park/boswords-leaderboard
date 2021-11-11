@@ -5,6 +5,8 @@ import axios from 'axios';
 import _ from 'lodash';
 import styled from 'styled-components';
 import {Boxplot} from 'react-boxplot';
+import { useLocation } from 'react-router';
+import GA from 'react-ga';
 
 const divranks = {
     Stormy: 1,
@@ -67,6 +69,11 @@ const tfmt = function(secs){
 
 
 function PuzzleStatistics(props){
+
+    const location = useLocation();
+    useEffect(() => {
+        GA.pageview(location.pathname);
+    }, [location]);
 
     let { puzzleid } = useParams();
     

@@ -6,10 +6,17 @@ import styled from 'styled-components';
 import scrollbarWidth from '../scrollbarWidth'
 import Cookies from 'universal-cookie';
 import axios from 'axios';
+import { useLocation } from 'react-router';
+import GA from 'react-ga';
 
 const cookies = new Cookies();
 
 function Leaderboard(props) {
+
+    const location = useLocation();
+    useEffect(() => {
+        GA.pageview(location.pathname);
+    }, [location]);
 
     let { eventid } = useParams();
 

@@ -7,8 +7,11 @@ import {
   Route
 } from "react-router-dom";
 import 'react-app-polyfill/ie11';
+import GA from 'react-ga';
 
 function App() {
+
+  GA.initialize('G-HW58MYN8L7');
   
   return (
     <Router>
