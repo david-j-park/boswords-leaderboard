@@ -11,7 +11,7 @@ import GA from 'react-ga';
 
 function App() {
 
-  GA.initialize('G-HW58MYN8L7');
+  GA.initialize('UA-212586036-1');
   
   return (
     <Router>
