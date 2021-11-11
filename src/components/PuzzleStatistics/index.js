@@ -21,7 +21,7 @@ const Styles = styled.div`
         .statsContainer {
             padding: 1rem;
             display: flex;
-            flex-direction: row-reverse;
+            flex-direction: row;
             justify-content: center;
             flex-wrap: wrap;
         }
