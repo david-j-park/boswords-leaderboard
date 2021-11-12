@@ -93,6 +93,10 @@ function PuzzleStatistics(props){
 
     const handleDivChange = (e) => {
         setSelectedDvision(e.target.value);
+        GA.event({
+            category: "Set Filter: Division",
+            action: e.target.value
+        });
     }
 
     useEffect(() => {

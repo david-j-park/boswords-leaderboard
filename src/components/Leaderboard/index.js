@@ -262,6 +262,10 @@ const defaultColumn = React.useMemo(
         setTypeFilter(e.target.value);
         tableInstance.setFilter('entry_type', e.target.value === 'All' ? null : e.target.value);
         cookies.set('entry_type_filter', e.target.value);
+        GA.event({
+            category: "Set Filter: Entry Type",
+            action: e.target.value
+        });
     }
 
     const handleNameChange = function (e) {
@@ -273,6 +277,10 @@ const defaultColumn = React.useMemo(
         setDivFilter(e.target.value);
         tableInstance.setFilter('division', e.target.value);
         cookies.set('division_filter', e.target.value);
+        GA.event({
+            category: "Set Filter: Division",
+            action: e.target.value
+        });
     }
 
     return (
