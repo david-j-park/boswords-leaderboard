@@ -225,7 +225,7 @@ function PuzzleStatistics(props){
 
     return (
         <Styles>
-            <h1>Boswords Fall '21 League</h1>
+            <h1>Boswords Fall '22 League</h1>
             <h2>Solve Statistics</h2>
             <p>Data below include all clean solves completed within the 20-minute time limit.</p>
             <p>If you'd like to do your own analysis you can download the raw data in CSV format <a onClick={recordDownload} href={`https://4chbxgj610.execute-api.us-east-1.amazonaws.com/dev/solve-data/csv/${puzzleid}`}>here</a>.</p>
