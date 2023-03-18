@@ -33,6 +33,12 @@ function Leaderboard(props) {
 
     const scrollBarSize = React.useMemo(() => scrollbarWidth(), []);
 
+    const divranks = {
+        Stormy: 1,
+        Choppy: 2,
+        Smooth: 3
+    };
+
     const Styles = styled.div`
   padding: 1rem;
 
@@ -195,6 +201,13 @@ const defaultColumn = React.useMemo(
                     ]}
                 ];
                 if (res.data.event.divisions && res.data.event.divisions.length > 1){
+                    //sort here
+                    res.data.event.divisions.sort((a, b) => {
+                        if (divranks[a] && divranks[b]){
+                            return divranks[a] - divranks[b];
+                        }
+                        else return a.localeCompare(b);
+                    })
                     cols[0].columns.splice(3, 0, 
                         {
                             Header: 'Division',
