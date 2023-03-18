@@ -82,6 +82,7 @@ function PuzzleStatistics(props){
     //const [cleanOnly] = useState(true);
     const [statistics, setStatistics] = useState();
     const [divisions, setDivisions] = useState([]);
+    const [eventName, setEventName] = useState();
     
     const colors = [
         '#B6D47E',
@@ -111,9 +112,10 @@ function PuzzleStatistics(props){
         axios.get(`https://4chbxgj610.execute-api.us-east-1.amazonaws.com/dev/solve-data/${puzzleid}`)
             .then(res => {
                 //setSolves(res.data);
+                setEventName(res.data.event);
 
                 //get divisions
-                let divs = _.uniqBy(res.data, 'division').map(v => {
+                let divs = _.uniqBy(res.data.solves, 'division').map(v => {
                     return v.division;
                 }).sort((a, b) => {
                     if (divranks[a] && divranks[b]){
@@ -131,7 +133,7 @@ function PuzzleStatistics(props){
                     stats[div] = {};
                     
                     //filter by division, group by puzzle
-                    let divSolves = _.groupBy(res.data.filter(v => {
+                    let divSolves = _.groupBy(res.data.solves.filter(v => {
                         return v.division === div;
                     }), (s) => {
                         return `Puzzle #${s.sequence}`
